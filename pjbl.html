@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Interval Counter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-900 text-white min-h-screen flex flex-col md:flex-row">
+
+    <!-- LEFT SPLIT: POSTER IMAGE -->
+    <div class="w-full md:w-1/3 h-[50vh] md:h-auto relative bg-slate-900 overflow-hidden group border-b md:border-b-0 md:border-r border-slate-800">
+        <img 
+            id="poster-img"
+            src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop" 
+            class="w-full h-full object-contain opacity-90 transition-transform duration-700 group-hover:scale-105" 
+            alt="Event Poster"
+            onerror="this.src='https://placehold.co/600x900/1e293b/white?text=Poster+Image'"
+        >
+        <!-- Gradient overlay -->
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent pointer-events-none"></div>
+    </div>
+
+    <!-- RIGHT SPLIT: COUNTER INTERFACE -->
+    <div class="w-full md:w-2/3 flex flex-col items-center justify-center p-8 bg-slate-900 min-h-[50vh] md:min-h-screen">
+        
+        <!-- 
+            RESTORED: 
+            - Reverted bg-slate-900 to bg-slate-800
+            - Brought back rounded-2xl, shadow-2xl, and border
+        -->
+        <div class="bg-slate-800 rounded-2xl shadow-2xl p-8 max-w-md w-full text-center border border-slate-700">
+            
+            <!-- Header -->
+            <h1 class="text-slate-400 text-sm uppercase tracking-widest font-semibold mb-6">
+                Kontribusi ANTI-Serangan Fajar
+            </h1>
+
+            <!-- REMOVED: Old Educational Content Area was here -->
+
+            <!-- Counter Display -->
+            <div class="mb-8">
+                <div id="counter" class="text-8xl font-bold text-emerald-400 tabular-nums transition-all duration-300">
+                    0
+                </div>
+                <!-- 
+                     MODIFIED: 
+                     - Changed text-slate-500 to text-slate-800
+                     - This makes the text the exact same color as the card background (invisible)
+                -->
+                <p class="text-slate-800 text-xs mt-2 select-none">
+                    <span id="base-count"></span> (Time) + <span id="manual-count">0</span> (Manual)
+                </p>
+            </div>
+
+            <!-- Action Button -->
+            <button 
+                id="add-btn"
+                onclick="incrementManual()" 
+                class="w-full bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-emerald-500 text-white font-bold py-4 px-6 rounded-xl transition-colors duration-200 flex items-center justify-center gap-2 shadow-lg group">
+                Saya Bekomitmen
+            </button>
+
+            <!-- Announcement Area -->
+            <div id="announcement" class="hidden mt-6 p-3 bg-blue-500/20 text-blue-200 text-sm rounded-lg border border-blue-500/30 animate-pulse">
+                Input anda sudah terdata, Input akan ditampilkan di update berikutnya
+            </div>
+
+            <!-- GEMINI INTEGRATION: INTEGRITY MOTIVATOR -->
+            <div class="mt-6 pt-6 border-t border-slate-700/50">
+                <button 
+                    onclick="generateFact()"
+                    class="text-sm text-indigo-400 hover:text-indigo-300 transition-colors flex items-center justify-center gap-2 mx-auto mb-3 group/ai">
+                    <span class="group-hover/ai:scale-110 transition-transform">💡</span>
+                    <span>Fakta: Dampak Politik Uang</span>
+                </button>
+                
+                <div id="ai-response" class="hidden p-4 bg-indigo-900/20 border border-indigo-500/30 rounded-xl text-indigo-200 text-sm italic relative min-h-[80px] flex items-center justify-center">
+                    <div id="ai-loading" class="absolute inset-0 flex items-center justify-center bg-slate-800/50 backdrop-blur-sm rounded-xl hidden">
+                        <div class="w-4 h-4 border-2 border-indigo-400 border-t-transparent rounded-full animate-spin"></div>
+                    </div>
+                    <p id="ai-text" class="w-full text-center"></p>
+                </div>
+            </div>
+
+            <!-- Debug/Info Info -->
+            <div class="mt-4 p-4 bg-slate-900/50 rounded-lg text-left space-y-2 border border-slate-700/50">
+                <div class="flex justify-between text-xs text-slate-400">
+                    <span>Update Selanjutnya:</span>
+                    <span id="next-update" class="font-mono text-emerald-400"></span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- NEW: ACTION GUIDE (OUTSIDE THE MAIN CARD) -->
+        <div class="mt-8 max-w-md w-full">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="h-px bg-slate-800 flex-1"></div>
+                <span class="text-slate-500 text-xs font-bold uppercase tracking-widest">Langkah Konkret</span>
+                <div class="h-px bg-slate-800 flex-1"></div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-4">
+                <!-- Step 1: TOLAK -->
+                <div class="group bg-slate-800/50 border border-slate-700/50 hover:bg-red-500/10 hover:border-red-500/30 p-4 rounded-xl flex flex-col items-center text-center transition-all duration-300 cursor-default">
+                    <div class="w-10 h-10 rounded-full bg-slate-700 group-hover:bg-red-500 group-hover:text-white flex items-center justify-center text-xl mb-3 transition-colors">
+                        ✋
+                    </div>
+                    <h3 class="text-slate-300 group-hover:text-red-400 font-bold text-xs uppercase mb-1">Tolak</h3>
+                    <p class="text-[10px] text-slate-500 group-hover:text-red-200/70 leading-tight">
+                        Jangan terima uang atau barang apapun.
+                    </p>
+                </div>
+
+                <!-- Step 2: REKAM -->
+                <div class="group bg-slate-800/50 border border-slate-700/50 hover:bg-amber-500/10 hover:border-amber-500/30 p-4 rounded-xl flex flex-col items-center text-center transition-all duration-300 cursor-default">
+                    <div class="w-10 h-10 rounded-full bg-slate-700 group-hover:bg-amber-500 group-hover:text-white flex items-center justify-center text-xl mb-3 transition-colors">
+                        📸
+                    </div>
+                    <h3 class="text-slate-300 group-hover:text-amber-400 font-bold text-xs uppercase mb-1">Rekam</h3>
+                    <p class="text-[10px] text-slate-500 group-hover:text-amber-200/70 leading-tight">
+                        Foto atau video pelaku sebagai bukti.
+                    </p>
+                </div>
+
+                <!-- Step 3: LAPOR -->
+                <div class="group bg-slate-800/50 border border-slate-700/50 hover:bg-blue-500/10 hover:border-blue-500/30 p-4 rounded-xl flex flex-col items-center text-center transition-all duration-300 cursor-default">
+                    <div class="w-10 h-10 rounded-full bg-slate-700 group-hover:bg-blue-500 group-hover:text-white flex items-center justify-center text-xl mb-3 transition-colors">
+                        📢
+                    </div>
+                    <h3 class="text-slate-300 group-hover:text-blue-400 font-bold text-xs uppercase mb-1">Lapor</h3>
+                    <p class="text-[10px] text-slate-500 group-hover:text-blue-200/70 leading-tight">
+                        Laporkan ke Bawaslu atau Gakkumdu.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // 1. CONFIGURATION
+        // Reference Time: November 1, 2025 at 00:00:00
+        const REFERENCE_TIME = new Date('2025-11-17T00:00:00').getTime();
+        
+        // You can replace this URL with your local file path (e.g., "./myposter.jpg")
+        const POSTER_URL = "poster_pjbl.png";
+        
+        // 6 Hours in milliseconds
+        const SIX_HOURS_MS = 6 * 60 * 60 * 1000;
+
+        // 2. STATE
+        let manualClicks = 0;
+        let hasClicked = false;
+
+        // 3. DOM ELEMENTS
+        const counterEl = document.getElementById('counter');
+        const baseCountEl = document.getElementById('base-count');
+        const manualCountEl = document.getElementById('manual-count');
+        const nextUpdateEl = document.getElementById('next-update');
+        const addBtnEl = document.getElementById('add-btn');
+        const announcementEl = document.getElementById('announcement');
+        const posterImgEl = document.getElementById('poster-img');
+        
+        // GEMINI ELEMENTS
+        const aiResponseEl = document.getElementById('ai-response');
+        const aiTextEl = document.getElementById('ai-text');
+        const aiLoadingEl = document.getElementById('ai-loading');
+
+        // Set poster image from config
+        posterImgEl.src = POSTER_URL;
+
+        // GEMINI API INTEGRATION
+        const apiKey = ""; // System provides this key at runtime
+
+        async function generateFact() {
+            // REMOVED: The check for (!apiKey) was preventing the code from running.
+            // We now let it proceed so the environment can handle the request.
+
+            aiResponseEl.classList.remove('hidden');
+            aiLoadingEl.classList.remove('hidden');
+            aiTextEl.innerText = "";
+
+            // 1. RANDOMIZED THEMES FOR VARIETY (Facts/Data focus)
+            const themes = [
+                "Hukum: Pasal UU Pemilu tentang hukuman penjara bagi pemberi dan penerima.",
+                "Ekonomi: Perbandingan gaji pejabat vs biaya kampanye yang tidak masuk akal.",
+                "Korupsi: Statistik KPK tentang hubungan biaya politik tinggi dengan kasus korupsi.",
+                "Layanan Publik: Dampak korupsi APBD terhadap jalan rusak atau sekolah hancur.",
+                "Inflasi: Bagaimana uang beredar saat pemilu memicu kenaikan harga barang.",
+                "Sejarah: Contoh kasus negara yang hancur karena korupsi sistemik.",
+                "Anggaran: Berapa triliun uang negara yang dicuri koruptor per tahun."
+            ];
+            const randomTheme = themes[Math.floor(Math.random() * themes.length)];
+
+            // Backup facts in case API fails (Real Data/Laws)
+            const backupFacts = [
+                "Menurut riset KPK, biaya menjadi Bupati rata-rata Rp 30 Miliar, padahal gaji 5 tahun hanya Rp 3-4 Miliar.",
+                "Pelaku politik uang diancam pidana penjara paling lama 4 tahun dan denda Rp 48 juta (UU No. 7/2017).",
+                "Indeks Persepsi Korupsi Indonesia memburuk seiring naiknya biaya politik.",
+                "Korupsi APBD untuk 'balik modal' kampanye adalah penyebab utama jalanan rusak di daerah.",
+                "Lebih dari 80% Kepala Daerah yang ditangkap KPK tersandung kasus suap perizinan demi menutup biaya pemilu.",
+                "Uang suap 100 ribu yang Anda terima merenggut fasilitas kesehatan senilai jutaan rupiah di masa depan.",
+                "Biaya politik tinggi memaksa pejabat korupsi; 1 dari 3 kepala daerah terjerat kasus hukum."
+            ];
+            const randomBackup = backupFacts[Math.floor(Math.random() * backupFacts.length)];
+
+            // 2. DYNAMIC PROMPT (Fact-based)
+            const prompt = `Berikan satu FAKTA SINGKAT, DATA STATISTIK, atau INFORMASI HUKUM nyata (maksimal 25 kata) tentang bahaya politik uang atau korupsi di Indonesia. Jangan berikan nasihat/kata mutiara. Fokus pada angka, hukum, atau kausalitas logis. Konteks: ${randomTheme}`;
+
+            try {
+                // Exponential backoff retry logic
+                const fetchWithRetry = async (url, options, retries = 3, backoff = 1000) => {
+                    try {
+                        const response = await fetch(url, options);
+                        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                        return await response.json();
+                    } catch (error) {
+                        if (retries > 0) {
+                            await new Promise(r => setTimeout(r, backoff));
+                            return fetchWithRetry(url, options, retries - 1, backoff * 2);
+                        }
+                        throw error;
+                    }
+                };
+
+                const result = await fetchWithRetry(
+                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`,
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: prompt }] }]
+                        })
+                    }
+                );
+
+                const text = result.candidates?.[0]?.content?.parts?.[0]?.text || randomBackup;
+                
+                // Hide loader
+                aiLoadingEl.classList.add('hidden');
+                
+                // Simple typewriter effect
+                let i = 0;
+                aiTextEl.innerText = "";
+                function typeWriter() {
+                    if (i < text.length) {
+                        aiTextEl.innerHTML += text.charAt(i);
+                        i++;
+                        setTimeout(typeWriter, 30);
+                    }
+                }
+                typeWriter();
+
+            } catch (error) {
+                console.error("Gemini Error:", error);
+                aiLoadingEl.classList.add('hidden');
+                // Use the randomized backup quote instead of a static error message
+                aiTextEl.innerText = randomBackup;
+            }
+        }
+
+        // 4. MAIN LOGIC
+        function updateCounter() {
+            const now = Date.now();
+            const diff = now - REFERENCE_TIME;
+
+            // Calculate how many 6-hour chunks have passed
+            const timeBasedCount = Math.max(0, Math.floor(diff / SIX_HOURS_MS));
+
+            // Calculate time until next increment
+            const msUntilNext = SIX_HOURS_MS - (diff % SIX_HOURS_MS);
+            const hoursLeft = Math.floor(msUntilNext / (1000 * 60 * 60));
+            const minutesLeft = Math.floor((msUntilNext % (1000 * 60 * 60)) / (1000 * 60));
+            const secondsLeft = Math.floor((msUntilNext % (1000 * 60)) / 1000);
+            
+            // Update DOM
+            const total = timeBasedCount + manualClicks;
+            
+            counterEl.innerText = total.toLocaleString();
+            baseCountEl.innerText = timeBasedCount;
+            manualCountEl.innerText = manualClicks;
+            
+            // Show simplified countdown
+            if (diff < 0) {
+                nextUpdateEl.innerText = "Waiting for start date...";
+            } else {
+                nextUpdateEl.innerText = `in ${hoursLeft}h ${minutesLeft}m ${secondsLeft}s`;
+            }
+        }
+
+        function incrementManual() {
+            if (hasClicked) return;
+            
+            manualClicks++;
+            hasClicked = true;
+            
+            // Disable button UI
+            addBtnEl.disabled = true;
+            
+            // Show announcement
+            announcementEl.classList.remove('hidden');
+            
+            updateCounter();
+        }
+
+        // 5. INITIALIZATION
+        updateCounter();
+        setInterval(updateCounter, 1000);
+    </script>
+</body>
+</html>
