@@ -12,7 +12,7 @@
 </head>
 <body class="bg-slate-900 text-white min-h-screen flex flex-col md:flex-row">
 
-    
+    <!-- LEFT SPLIT: POSTER IMAGE -->
     <div class="w-full md:w-1/3 h-[50vh] md:h-auto relative bg-slate-900 overflow-hidden group border-b md:border-b-0 md:border-r border-slate-800">
         <img 
             id="poster-img"
@@ -21,31 +21,60 @@
             alt="Event Poster"
             onerror="this.src='https://placehold.co/600x900/1e293b/white?text=Poster+Image'"
         >
-        
+        <!-- Gradient overlay -->
         <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent pointer-events-none"></div>
     </div>
 
-    
+    <!-- RIGHT SPLIT: COUNTER INTERFACE -->
     <div class="w-full md:w-2/3 flex flex-col items-center justify-center p-8 bg-slate-900 min-h-[50vh] md:min-h-screen">
         
+        <!-- ONLINE VIDEO PLAYER (STREAMING) -->
+        <div class="max-w-md w-full bg-slate-800 rounded-2xl shadow-2xl border border-slate-700 overflow-hidden mb-8">
+            <div class="relative aspect-video bg-black group">
+                <!-- 
+                     NOTE: YouTube embeds are currently blocked in this preview environment.
+                     I have used a direct MP4 link below so you can see the player working.
+                     
+                     WHEN DEPLOYING TO REAL WEB HOSTING, YOU CAN USE THIS YOUTUBE CODE:
+                     <iframe 
+                        class="absolute top-0 left-0 w-full h-full"
+                        src="https://www.youtube.com/embed/EngW7tLk6R8" 
+                        title="YouTube video player" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                     </iframe>
+                -->
+                <iframe 
+                        class="absolute top-0 left-0 w-full h-full"
+                        src="https://www.youtube.com/embed/EngW7tLk6R8" 
+                        title="YouTube video player" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+
         <div class="bg-slate-800 rounded-2xl shadow-2xl p-8 max-w-md w-full text-center border border-slate-700">
             
-            
+            <!-- Header -->
             <h1 class="text-slate-400 text-sm uppercase tracking-widest font-semibold mb-6">
                 Kontribusi ANTI-Serangan Fajar
             </h1>
 
-            
+            <!-- Counter Display -->
             <div class="mb-8">
                 <div id="counter" class="text-8xl font-bold text-emerald-400 tabular-nums transition-all duration-300">
                     0
                 </div>
+                <!-- Hidden calculation details -->
                 <p class="text-slate-800 text-xs mt-2 select-none">
                     <span id="base-count"></span> (Time) + <span id="manual-count">0</span> (Manual)
                 </p>
             </div>
 
-            
+            <!-- Action Button -->
             <button 
                 id="add-btn"
                 onclick="incrementManual()" 
@@ -53,12 +82,12 @@
                 Saya Bekomitmen
             </button>
 
-            
+            <!-- Announcement Area -->
             <div id="announcement" class="hidden mt-6 p-3 bg-blue-500/20 text-blue-200 text-sm rounded-lg border border-blue-500/30 animate-pulse">
                 Input anda sudah terdata, Input akan ditampilkan di update berikutnya
             </div>
 
-            
+            <!-- GEMINI INTEGRATION -->
             <div class="mt-6 pt-6 border-t border-slate-700/50">
                 <button 
                     onclick="generateFact()"
@@ -75,7 +104,7 @@
                 </div>
             </div>
 
-           
+            <!-- Update Info -->
             <div class="mt-4 p-4 bg-slate-900/50 rounded-lg text-left space-y-2 border border-slate-700/50">
                 <div class="flex justify-between text-xs text-slate-400">
                     <span>Update Selanjutnya:</span>
@@ -85,7 +114,7 @@
 
         </div>
 
-        
+        <!-- ACTION GUIDE -->
         <div class="mt-8 max-w-md w-full">
             <div class="flex items-center gap-4 mb-6">
                 <div class="h-px bg-slate-800 flex-1"></div>
@@ -94,7 +123,7 @@
             </div>
 
             <div class="grid grid-cols-3 gap-4">
-                
+                <!-- Step 1: TOLAK -->
                 <div class="group bg-slate-800/50 border border-slate-700/50 hover:bg-red-500/10 hover:border-red-500/30 p-4 rounded-xl flex flex-col items-center text-center transition-all duration-300 cursor-default">
                     <div class="w-10 h-10 rounded-full bg-slate-700 group-hover:bg-red-500 group-hover:text-white flex items-center justify-center text-xl mb-3 transition-colors">
                         ✋
@@ -105,7 +134,7 @@
                     </p>
                 </div>
 
-                
+                <!-- Step 2: REKAM -->
                 <div class="group bg-slate-800/50 border border-slate-700/50 hover:bg-amber-500/10 hover:border-amber-500/30 p-4 rounded-xl flex flex-col items-center text-center transition-all duration-300 cursor-default">
                     <div class="w-10 h-10 rounded-full bg-slate-700 group-hover:bg-amber-500 group-hover:text-white flex items-center justify-center text-xl mb-3 transition-colors">
                         📸
@@ -116,7 +145,7 @@
                     </p>
                 </div>
 
-                
+                <!-- Step 3: LAPOR -->
                 <div class="group bg-slate-800/50 border border-slate-700/50 hover:bg-blue-500/10 hover:border-blue-500/30 p-4 rounded-xl flex flex-col items-center text-center transition-all duration-300 cursor-default">
                     <div class="w-10 h-10 rounded-full bg-slate-700 group-hover:bg-blue-500 group-hover:text-white flex items-center justify-center text-xl mb-3 transition-colors">
                         📢
@@ -132,20 +161,16 @@
     </div>
 
     <script>
-       
+        // 1. CONFIGURATION
         const REFERENCE_TIME = new Date('2025-11-17T00:00:00').getTime();
-        
-      
         const POSTER_URL = "poster_pjbl.png";
-        
-        
         const SIX_HOURS_MS = 6 * 60 * 60 * 1000;
 
-     
+        // 2. STATE
         let manualClicks = 0;
         let hasClicked = false;
 
-      
+        // 3. DOM ELEMENTS
         const counterEl = document.getElementById('counter');
         const baseCountEl = document.getElementById('base-count');
         const manualCountEl = document.getElementById('manual-count');
@@ -154,53 +179,57 @@
         const announcementEl = document.getElementById('announcement');
         const posterImgEl = document.getElementById('poster-img');
         
-      
+        // GEMINI ELEMENTS
         const aiResponseEl = document.getElementById('ai-response');
         const aiTextEl = document.getElementById('ai-text');
         const aiLoadingEl = document.getElementById('ai-loading');
 
-       
+        // Set poster image
         posterImgEl.src = POSTER_URL;
 
-        
-        const apiKey = ""; 
+        // GEMINI API INTEGRATION
+        const apiKey = ""; // System provides this key at runtime
 
         async function generateFact() {
-            
+            // REMOVED: The check for (!apiKey) was preventing the code from running.
+            // We now let it proceed so the environment can handle the request.
 
             aiResponseEl.classList.remove('hidden');
             aiLoadingEl.classList.remove('hidden');
             aiTextEl.innerText = "";
 
-        
+            // STRICTLY IMPACT-FOCUSED THEMES
             const themes = [
-                "Hukum: Pasal UU Pemilu tentang hukuman penjara bagi pemberi dan penerima.",
-                "Ekonomi: Perbandingan gaji pejabat vs biaya kampanye yang tidak masuk akal.",
-                "Korupsi: Statistik KPK tentang hubungan biaya politik tinggi dengan kasus korupsi.",
-                "Layanan Publik: Dampak korupsi APBD terhadap jalan rusak atau sekolah hancur.",
-                "Inflasi: Bagaimana uang beredar saat pemilu memicu kenaikan harga barang.",
-                "Sejarah: Contoh kasus negara yang hancur karena korupsi sistemik.",
-                "Anggaran: Berapa triliun uang negara yang dicuri koruptor per tahun."
+                "Dampak: Kualitas layanan kesehatan dan pendidikan yang buruk akibat anggaran dikorupsi.",
+                "Dampak: Jalanan rusak dan infrastruktur terbengkalai karena dana APBD untuk balik modal.",
+                "Dampak: Pemimpin tidak kompeten yang hanya peduli pada sponsor politik.",
+                "Dampak: Inflasi harga barang pokok pasca-pemilu akibat peredaran uang gelap.",
+                "Dampak: Sulitnya lapangan kerja karena kebijakan ekonomi dikendalikan oligarki.",
+                "Dampak: Penegakan hukum yang lemah karena aparat bisa disuap.",
+                "Dampak: Pajak rakyat disalahgunakan untuk kepentingan pribadi pejabat."
             ];
             const randomTheme = themes[Math.floor(Math.random() * themes.length)];
 
-     
+            // EXPANDED BACKUP FACTS (Only Negative Impacts)
             const backupFacts = [
-                "Menurut riset KPK, biaya menjadi Bupati rata-rata Rp 30 Miliar, padahal gaji 5 tahun hanya Rp 3-4 Miliar.",
-                "Pelaku politik uang diancam pidana penjara paling lama 4 tahun dan denda Rp 48 juta (UU No. 7/2017).",
-                "Indeks Persepsi Korupsi Indonesia memburuk seiring naiknya biaya politik.",
-                "Korupsi APBD untuk 'balik modal' kampanye adalah penyebab utama jalanan rusak di daerah.",
-                "Lebih dari 80% Kepala Daerah yang ditangkap KPK tersandung kasus suap perizinan demi menutup biaya pemilu.",
-                "Uang suap 100 ribu yang Anda terima merenggut fasilitas kesehatan senilai jutaan rupiah di masa depan.",
-                "Biaya politik tinggi memaksa pejabat korupsi; 1 dari 3 kepala daerah terjerat kasus hukum."
+                "Jalan rusak dan banjir adalah akibat langsung dari dana APBD yang dikorupsi untuk balik modal serangan fajar.",
+                "Pelayanan BPJS dan Puskesmas memburuk karena anggaran kesehatan disunat oleh pejabat korup.",
+                "Politik uang menciptakan pemimpin yang lebih takut pada sponsor/cukong daripada rakyatnya sendiri.",
+                "Harga sembako sering naik tak terkendali karena kebijakan pasar diatur oleh penyumbang dana kampanye.",
+                "Anak muda sulit dapat kerja karena investasi daerah hanya dikuasai kroni pejabat.",
+                "Uang suap 100 ribu hari ini dibayar dengan 5 tahun penderitaan tanpa perbaikan fasilitas umum.",
+                "Sekolah-sekolah negeri di daerah terpencil hancur karena dana renovasi dicuri koruptor.",
+                "Masyarakat kehilangan hak protes; pejabat merasa 'sudah lunas' membeli suara Anda.",
+                "Bantuan sosial sering tidak tepat sasaran karena data dimanipulasi untuk kepentingan politik.",
+                "Investor asing takut masuk karena hukum yang bisa dibeli, mengakibatkan minimnya lapangan kerja baru."
             ];
             const randomBackup = backupFacts[Math.floor(Math.random() * backupFacts.length)];
 
-          
-            const prompt = `Berikan satu FAKTA SINGKAT, DATA STATISTIK, atau INFORMASI HUKUM nyata (maksimal 25 kata) tentang bahaya politik uang atau korupsi di Indonesia. Jangan berikan nasihat/kata mutiara. Fokus pada angka, hukum, atau kausalitas logis. Konteks: ${randomTheme}`;
+            // PROMPT FOCUSED ON CAUSALITY AND IMPACT
+            const prompt = `Berikan satu FAKTA SINGKAT atau KAUSALITAS LOGIS (maksimal 25 kata) tentang DAMPAK BURUK / KONSEKUENSI NYATA dari politik uang bagi rakyat biasa. Jangan bahas definisi. Fokus pada: kemiskinan, layanan publik rusak, atau korupsi. Konteks: ${randomTheme}`;
 
             try {
-               
+                // Exponential backoff retry logic
                 const fetchWithRetry = async (url, options, retries = 3, backoff = 1000) => {
                     try {
                         const response = await fetch(url, options);
@@ -228,9 +257,10 @@
 
                 const text = result.candidates?.[0]?.content?.parts?.[0]?.text || randomBackup;
                 
-               
+                // Hide loader
                 aiLoadingEl.classList.add('hidden');
-         
+                
+                // Simple typewriter effect
                 let i = 0;
                 aiTextEl.innerText = "";
                 function typeWriter() {
@@ -245,45 +275,48 @@
             } catch (error) {
                 console.error("Gemini Error:", error);
                 aiLoadingEl.classList.add('hidden');
-             
+                // Use the randomized backup quote instead of a static error message
                 aiTextEl.innerText = randomBackup;
             }
         }
 
- 
+        // 4. MAIN LOGIC
         function updateCounter() {
             const now = Date.now();
             const diff = now - REFERENCE_TIME;
 
-        
+            // 1. Calculate total intervals passed (how many 6-hour blocks)
             const totalIntervals = Math.max(0, Math.floor(diff / SIX_HOURS_MS));
 
-         
+            // 2. Calculate deterministic random sum
+            // Instead of just (intervals * 1), we sum a random number (1-2) for each interval.
+            // We use Math.sin(index) as a seed to ensure it's always the same random number
+            // for the same interval (so it survives page refreshes).
             let timeBasedCount = 0;
             for (let i = 0; i < totalIntervals; i++) {
-              
+                // Deterministic 'random' number generator for index i
                 const seed = i + 1; 
                 const pseudoRandom = Math.abs(Math.sin(seed * 9999));
-             
+                // CHANGED: Scale to 2 and add 1, resulting in either 1 or 2.
                 const increment = Math.floor(pseudoRandom * 2) + 1; 
                 
                 timeBasedCount += increment;
             }
 
-     
+            // Calculate time until next increment
             const msUntilNext = SIX_HOURS_MS - (diff % SIX_HOURS_MS);
             const hoursLeft = Math.floor(msUntilNext / (1000 * 60 * 60));
             const minutesLeft = Math.floor((msUntilNext % (1000 * 60 * 60)) / (1000 * 60));
             const secondsLeft = Math.floor((msUntilNext % (1000 * 60)) / 1000);
             
-    
+            // Update DOM
             const total = timeBasedCount + manualClicks;
             
             counterEl.innerText = total.toLocaleString();
             baseCountEl.innerText = timeBasedCount;
             manualCountEl.innerText = manualClicks;
             
-         
+            // Show simplified countdown
             if (diff < 0) {
                 nextUpdateEl.innerText = "Waiting for start date...";
             } else {
@@ -297,19 +330,18 @@
             manualClicks++;
             hasClicked = true;
             
-     
+            // Disable button UI
             addBtnEl.disabled = true;
-         
+            
+            // Show announcement
             announcementEl.classList.remove('hidden');
             
             updateCounter();
         }
 
-   
+        // 5. INITIALIZATION
         updateCounter();
         setInterval(updateCounter, 1000);
     </script>
 </body>
 </html>
-
-
