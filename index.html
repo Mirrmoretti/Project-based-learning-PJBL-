@@ -238,7 +238,11 @@
 
         posterImgEl.src = POSTER_URL;
 
-        const apiKey = ""; // Ensure API key is available in environment
+        // --- PENTING UNTUK GITHUB / HOSTING SENDIRI ---
+        // Jika anda menggunakan ini di GitHub Pages, anda WAJIB mengisi API Key di bawah ini.
+        // Dapatkan API Key gratis di: https://aistudio.google.com/app/apikey
+        // Contoh: const apiKey = "AIzaSy...";
+        const apiKey = "AIzaSyC8O2_uOL9Rnd2s-kD4DJqnJnmonpO-cAs"; 
 
         // Helper function for API calls
         async function callGeminiAPI(prompt) {
@@ -310,7 +314,13 @@
             } catch (error) {
                 console.error("Connection Error:", error);
                 qaLoadingEl.classList.add('hidden');
-                qaTextEl.innerText = "Gagal memuat jawaban. Periksa koneksi internetmu.";
+                // IMPROVED ERROR MESSAGE
+                qaTextEl.innerHTML = `
+                    <span class="text-red-400 font-bold">Koneksi Gagal.</span><br>
+                    <span class="text-slate-400 text-xs">
+                        Jika ini di GitHub, pastikan anda sudah mengisi <b>API Key</b> di dalam kode (baris 230).
+                    </span>
+                `;
                 askBtn.disabled = false;
                 askBtn.classList.remove('opacity-50', 'cursor-not-allowed');
             }
@@ -369,7 +379,8 @@
             } catch (error) {
                 console.error("Gemini Error:", error);
                 aiLoadingEl.classList.add('hidden');
-                aiTextEl.innerText = randomBackup;
+                // IMPROVED ERROR MESSAGE FOR FACT GENERATOR
+                aiTextEl.innerHTML = `<span class="text-xs text-red-300">Gagal terhubung ke AI. Menampilkan data cadangan...</span><br><br>` + randomBackup;
             }
         }
 
