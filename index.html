@@ -8,10 +8,25 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
         body { font-family: 'Inter', sans-serif; }
+        /* Custom scrollbar for the text area */
+        textarea::-webkit-scrollbar {
+            width: 8px;
+        }
+        textarea::-webkit-scrollbar-track {
+            background: #1e293b; 
+        }
+        textarea::-webkit-scrollbar-thumb {
+            background: #475569; 
+            border-radius: 4px;
+        }
+        textarea::-webkit-scrollbar-thumb:hover {
+            background: #64748b; 
+        }
     </style>
 </head>
 <body class="bg-slate-900 text-white min-h-screen flex flex-col md:flex-row">
 
+    <!-- Left Column: Poster/Image -->
     <div class="w-full md:w-1/3 h-[50vh] md:h-auto relative bg-slate-900 overflow-hidden group border-b md:border-b-0 md:border-r border-slate-800">
         <img 
             id="poster-img"
@@ -23,8 +38,10 @@
         <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent pointer-events-none"></div>
     </div>
 
+    <!-- Right Column: Content -->
     <div class="w-full md:w-2/3 flex flex-col items-center justify-center p-8 bg-slate-900 min-h-[50vh] md:min-h-screen">
         
+        <!-- Video Section -->
         <div class="max-w-md w-full bg-slate-800 rounded-2xl shadow-2xl border border-slate-700 overflow-hidden mb-8">
             <div class="relative aspect-video bg-black group">
                 <iframe 
@@ -38,6 +55,7 @@
             </div>
         </div>
 
+        <!-- Main Counter & Commitment Section -->
         <div class="bg-slate-800 rounded-2xl shadow-2xl p-8 max-w-md w-full text-center border border-slate-700">
             
             <h1 class="text-slate-400 text-sm uppercase tracking-widest font-semibold mb-6">
@@ -69,7 +87,7 @@
                     onclick="generateFact()"
                     class="text-sm text-indigo-400 hover:text-indigo-300 transition-colors flex items-center justify-center gap-2 mx-auto mb-3 group/ai">
                     <span class="group-hover/ai:scale-110 transition-transform">🤔</span>
-                    <span>Kenapa Politik Uang Berdampak?</span>
+                    <span>Tampilkan Fakta Acak</span>
                 </button>
                 
                 <div id="ai-response" class="hidden p-4 bg-indigo-900/20 border border-indigo-500/30 rounded-xl text-indigo-200 text-sm italic relative min-h-[80px] flex items-center justify-center">
@@ -89,6 +107,57 @@
 
         </div>
 
+        <!-- NEW: Q&A Section (Humanized) -->
+        <div class="mt-8 max-w-md w-full bg-slate-800 rounded-2xl shadow-2xl p-6 border border-slate-700">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="p-2 bg-indigo-500/20 rounded-lg text-indigo-400">
+                    <!-- Changed icon to a generic message bubble -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                </div>
+                <!-- Changed Text -->
+                <h3 class="font-bold text-slate-200">Diskusi & Tanya Jawab</h3>
+            </div>
+            
+            <div class="space-y-4">
+                <textarea 
+                    id="user-question" 
+                    rows="2" 
+                    class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all resize-none"
+                    placeholder="Contoh: Apa hukuman bagi penerima serangan fajar?"></textarea>
+                
+                <button 
+                    onclick="askGemini()"
+                    id="ask-btn"
+                    class="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold py-2.5 px-4 rounded-xl transition-colors flex items-center justify-center gap-2">
+                    <span>Kirim Pertanyaan</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </button>
+
+                <!-- Q&A Response Area -->
+                <div id="qa-response-container" class="hidden mt-4">
+                    <div class="p-4 bg-slate-700/30 rounded-xl border border-slate-600/50">
+                        <div class="flex items-start gap-3">
+                            <!-- Changed Robot emoji to User Icon -->
+                            <div class="mt-1 min-w-[24px] text-indigo-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6"><path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd" /></svg>
+                            </div>
+                            <div class="space-y-2 w-full">
+                                <p id="qa-text" class="text-sm text-slate-300 leading-relaxed"></p>
+                                <div id="qa-loading" class="hidden">
+                                    <div class="flex gap-1">
+                                        <div class="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-bounce"></div>
+                                        <div class="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-bounce delay-75"></div>
+                                        <div class="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-bounce delay-150"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Concrete Steps Section -->
         <div class="mt-8 max-w-md w-full">
             <div class="flex items-center gap-4 mb-6">
                 <div class="h-px bg-slate-800 flex-1"></div>
@@ -129,6 +198,7 @@
             </div>
         </div>
         
+        <!-- External Quiz Link -->
         <div class="mt-8 text-center">
             <a href="https://wayground.com/join?gc=29037530&source=liveDashboard" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-indigo-500/50 text-slate-300 hover:text-white rounded-full transition-all duration-300 text-sm font-semibold shadow-lg group">
                 <span>🎉</span> 
@@ -154,14 +224,99 @@
         const announcementEl = document.getElementById('announcement');
         const posterImgEl = document.getElementById('poster-img');
         
+        // Random Fact Elements
         const aiResponseEl = document.getElementById('ai-response');
         const aiTextEl = document.getElementById('ai-text');
         const aiLoadingEl = document.getElementById('ai-loading');
 
+        // Q&A Elements
+        const qaResponseContainer = document.getElementById('qa-response-container');
+        const qaTextEl = document.getElementById('qa-text');
+        const qaLoadingEl = document.getElementById('qa-loading');
+        const userQuestionInput = document.getElementById('user-question');
+        const askBtn = document.getElementById('ask-btn');
+
         posterImgEl.src = POSTER_URL;
 
-        const apiKey = ""; 
+        const apiKey = ""; // Ensure API key is available in environment
 
+        // Helper function for API calls
+        async function callGeminiAPI(prompt) {
+            const fetchWithRetry = async (url, options, retries = 3, backoff = 1000) => {
+                try {
+                    const response = await fetch(url, options);
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    return await response.json();
+                } catch (error) {
+                    if (retries > 0) {
+                        await new Promise(r => setTimeout(r, backoff));
+                        return fetchWithRetry(url, options, retries - 1, backoff * 2);
+                    }
+                    throw error;
+                }
+            };
+
+            return await fetchWithRetry(
+                `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`,
+                {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }]
+                    })
+                }
+            );
+        }
+
+        // --- New Q&A Functionality ---
+        async function askGemini() {
+            const question = userQuestionInput.value.trim();
+            if (!question) return;
+
+            // UI Updates
+            askBtn.disabled = true;
+            askBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            qaResponseContainer.classList.remove('hidden');
+            qaLoadingEl.classList.remove('hidden');
+            qaTextEl.innerText = ""; // Clear previous answer
+
+            // CHANGED: Prompt now forces a short, human-like response.
+            const systemContext = `Berperanlah sebagai aktivis mahasiswa yang peduli isu korupsi.
+            Jawab pertanyaan ini dengan gaya bahasa manusia, langsung pada intinya, dan tegas.
+            JANGAN gunakan pembukaan kaku seperti "Sebagai AI" atau "Halo".
+            Maksimal 2 kalimat pendek.
+            Pertanyaan: "${question}"`;
+
+            try {
+                const result = await callGeminiAPI(systemContext);
+                const answer = result.candidates?.[0]?.content?.parts?.[0]?.text || "Maaf, belum bisa menjawab. Coba lagi nanti.";
+                
+                qaLoadingEl.classList.add('hidden');
+                
+                // Typewriter effect for Q&A
+                let i = 0;
+                function typeWriterQA() {
+                    if (i < answer.length) {
+                        qaTextEl.innerHTML += answer.charAt(i);
+                        i++;
+                        setTimeout(typeWriterQA, 20); 
+                    } else {
+                         askBtn.disabled = false;
+                         askBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    }
+                }
+                typeWriterQA();
+
+            } catch (error) {
+                console.error("Connection Error:", error);
+                qaLoadingEl.classList.add('hidden');
+                qaTextEl.innerText = "Gagal memuat jawaban. Periksa koneksi internetmu.";
+                askBtn.disabled = false;
+                askBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        }
+
+        // --- Existing Random Fact Functionality ---
         async function generateFact() {
             aiResponseEl.classList.remove('hidden');
             aiLoadingEl.classList.remove('hidden');
@@ -195,31 +350,7 @@
             const prompt = `Berikan satu FAKTA SINGKAT atau KAUSALITAS LOGIS (maksimal 25 kata) tentang DAMPAK BURUK / KONSEKUENSI NYATA dari politik uang bagi rakyat biasa. Jangan bahas definisi. Fokus pada: kemiskinan, layanan publik rusak, atau korupsi. Konteks: ${randomTheme}`;
 
             try {
-                const fetchWithRetry = async (url, options, retries = 3, backoff = 1000) => {
-                    try {
-                        const response = await fetch(url, options);
-                        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                        return await response.json();
-                    } catch (error) {
-                        if (retries > 0) {
-                            await new Promise(r => setTimeout(r, backoff));
-                            return fetchWithRetry(url, options, retries - 1, backoff * 2);
-                        }
-                        throw error;
-                    }
-                };
-
-                const result = await fetchWithRetry(
-                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`,
-                    {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            contents: [{ parts: [{ text: prompt }] }]
-                        })
-                    }
-                );
-
+                const result = await callGeminiAPI(prompt);
                 const text = result.candidates?.[0]?.content?.parts?.[0]?.text || randomBackup;
                 
                 aiLoadingEl.classList.add('hidden');
@@ -242,6 +373,7 @@
             }
         }
 
+        // --- Counter Logic ---
         function updateCounter() {
             const now = Date.now();
             const diff = now - REFERENCE_TIME;
@@ -277,14 +409,10 @@
 
         function incrementManual() {
             if (hasClicked) return;
-            
             manualClicks++;
             hasClicked = true;
-            
             addBtnEl.disabled = true;
-            
             announcementEl.classList.remove('hidden');
-            
             updateCounter();
         }
 
@@ -293,4 +421,3 @@
     </script>
 </body>
 </html>
-
